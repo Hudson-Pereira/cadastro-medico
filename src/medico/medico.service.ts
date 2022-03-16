@@ -1,11 +1,38 @@
-import { Injectable } from '@nestjs/common';
-import { CreateMedicoDto } from './dto/create-medico.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
 
+function vazio() {
+  throw new HttpException('Faltam dados.', HttpStatus.BAD_REQUEST);
+}
+function erro(error) {
+  console.error(error);
+  throw new HttpException(
+    'Erro ao cadastrar, tente novamente.',
+    HttpStatus.BAD_REQUEST,
+  );
+}
 @Injectable()
 export class MedicoService {
-  create(createMedicoDto: CreateMedicoDto) {
-    return 'This action adds a new medico';
+  constructor(private prisma: PrismaService) {}
+
+  async create(data: Prisma.MedicoCreateInput) {
+    try {
+      const medico = await this.prisma.medico.create({ data });
+      if (
+        !medico.nome ||
+        !medico.CRM ||
+        !medico.telefone ||
+        !medico.celular ||
+        !medico.CEP
+      ) {
+        vazio;
+      }
+      return medico;
+    } catch (error) {
+      erro(error);
+    }
   }
 
   findAll() {
