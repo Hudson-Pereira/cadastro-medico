@@ -1,26 +1,90 @@
-import { Injectable } from '@nestjs/common';
-import { CreateEspecialidadeDto } from './dto/create-especialidade.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateEspecialidadeDto } from './dto/update-especialidade.dto';
 
+function vazio() {
+  throw new HttpException('Nenhum item encontrado.', HttpStatus.NOT_FOUND);
+}
+
+function erroCadastro(error) {
+  console.error(error.message);
+  throw new HttpException(
+    'Erro ao cadastrar, tente novamente.',
+    HttpStatus.BAD_REQUEST,
+  );
+}
 @Injectable()
 export class EspecialidadeService {
-  create(createEspecialidadeDto: CreateEspecialidadeDto) {
-    return 'This action adds a new especialidade';
+  constructor(private prisma: PrismaService) {}
+
+  async create(data: Prisma.EspecialidadeCreateInput) {
+    try {
+      const especialidade = await this.prisma.especialidade.create({ data });
+      return [
+        `Especialidade ${especialidade.nome} criada com sucesso.`,
+        especialidade,
+      ];
+    } catch (error) {
+      erroCadastro(error);
+    }
   }
 
-  findAll() {
-    return `This action returns all especialidade`;
+  async findAll() {
+    try {
+      const total = await this.prisma.especialidade.findMany({});
+      if (total.length === 0) {
+        vazio();
+      }
+      return [`${total.length} especialidades cadastradas.`, total];
+    } catch (error) {
+      console.error(error.message);
+      vazio();
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} especialidade`;
+  async findOne(id: number) {
+    try {
+      const especialidade = await this.prisma.especialidade.findUnique({
+        where: { id },
+      });
+      if (!especialidade) {
+        vazio();
+      }
+      return especialidade;
+    } catch (error) {
+      console.error(error);
+      vazio();
+    }
   }
 
-  update(id: number, updateEspecialidadeDto: UpdateEspecialidadeDto) {
-    return `This action updates a #${id} especialidade`;
+  async update(id: number, _updateEspecialidadeDto: UpdateEspecialidadeDto) {
+    try {
+      const especialidade = await this.prisma.especialidade.update({
+        data: { ..._updateEspecialidadeDto },
+        where: { id },
+      });
+      if (!especialidade) {
+        vazio();
+      }
+    } catch (error) {
+      console.log(error.message);
+      vazio();
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} especialidade`;
+  async remove(id: number) {
+    try {
+      const especialidade = await this.prisma.especialidade.delete({
+        where: { id },
+      });
+      if (!especialidade) {
+        vazio();
+      }
+      return [`Excluído com sucesso.`, especialidade];
+    } catch (error) {
+      console.error(error.message);
+      vazio();
+    }
   }
 }

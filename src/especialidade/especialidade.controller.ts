@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { EspecialidadeService } from './especialidade.service';
 import { CreateEspecialidadeDto } from './dto/create-especialidade.dto';
 import { UpdateEspecialidadeDto } from './dto/update-especialidade.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Especialidades')
 @Controller('especialidade')
 export class EspecialidadeController {
   constructor(private readonly especialidadeService: EspecialidadeService) {}
@@ -23,7 +33,10 @@ export class EspecialidadeController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEspecialidadeDto: UpdateEspecialidadeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateEspecialidadeDto: UpdateEspecialidadeDto,
+  ) {
     return this.especialidadeService.update(+id, updateEspecialidadeDto);
   }
 

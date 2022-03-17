@@ -25,7 +25,7 @@ model Especialidade {
 model Especialista {
   id              Int           @unique @default(autoincrement())
   medicoId        Medico        @relation(fields: [medico], references: [id])
-  medico          Int
+  medico          Int           @unique
   especialidadeId Especialidade @relation(fields: [especialidade], references:[id])
   especialidade   Int        
 }

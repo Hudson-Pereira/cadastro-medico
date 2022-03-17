@@ -28,6 +28,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.1.5",
     "@nestjs/typeorm": "^8.0.3",
+    "@nestjsi/class-validator": "^0.1.4",
     "@prisma/client": "^3.11.0",
     "ajv": "^6.9.1",
     "class": "^0.1.4",
@@ -68,6 +69,7 @@
     "ts-loader": "^9.2.3",
     "ts-node": "^10.7.0",
     "tsconfig-paths": "^3.10.1",
+    "tsdocstandard": "^16.2.2",
     "typescript": "^4.6.2"
   },
   "prisma": {

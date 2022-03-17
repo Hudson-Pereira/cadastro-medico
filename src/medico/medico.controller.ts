@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { MedicoService } from './medico.service';
-import { CreateMedicoDto } from './dto/create-medico.dto';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
+import { CreateMedicoDto } from './dto/create-medico.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Medico')
 @Controller('medico')
 export class MedicoController {
   constructor(private readonly medicoService: MedicoService) {}
@@ -20,6 +30,11 @@ export class MedicoController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.medicoService.findOne(+id);
+  }
+
+  @Get(':nome')
+  findName(@Param('nome') nome: string) {
+    return this.medicoService.findName(nome);
   }
 
   @Patch(':id')
