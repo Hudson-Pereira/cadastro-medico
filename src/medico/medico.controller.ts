@@ -32,10 +32,30 @@ export class MedicoController {
     return this.medicoService.findOne(+id);
   }
 
-  @Get(':nome')
+  @Get('/nome/:nome')
   findName(@Param('nome') nome: string) {
     return this.medicoService.findName(nome);
   }
+
+  @Get('/crm/:crm')
+  findCRM(@Param('crm') crm: string) {
+    return this.medicoService.findCRM(+crm);
+  }
+
+  @Get('/tel/:telefone')
+  findTel(@Param('telefone') telefone: string) {
+    return this.medicoService.findTel(+telefone);
+  }
+
+  @Get('/cel/:celular')
+  findCel(@Param('celular') celular: string) {
+    return this.medicoService.findCel(+celular);
+  }
+
+  // @Get('/cep/:cep')
+  // findCEP(@Param('cep') cep: string) {
+  //   return this.medicoService.findCEP(+cep);
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMedicoDto: UpdateMedicoDto) {

@@ -17,7 +17,7 @@ function erroCadastro(error) {
 @Injectable()
 export class MedicoService {
   constructor(private prisma: PrismaService) {}
-  async create(data: Prisma.MedicoCreateInput) {
+  async create(data: Prisma.MedicoUncheckedCreateInput) {
     try {
       const medico = await this.prisma.medico.create({ data });
       return [`Médico ${medico.nome} cadastrado com sucesso.`, medico];
@@ -45,10 +45,15 @@ export class MedicoService {
       const especialista = await this.prisma.especialista.findMany({
         where: { medico: id },
       });
-      if (!doutor || !especialista) {
+      const end = await this.prisma.endereco.findMany({
+        where: { id: doutor.CEP },
+      });
+      console.log(end);
+
+      if (!doutor || doutor.deleted === true) {
         vazio();
       }
-      return [doutor, especialista];
+      return [doutor, especialista, end];
     } catch (error) {
       console.error(error.message);
       vazio();
@@ -57,11 +62,14 @@ export class MedicoService {
 
   async findName(nome: string) {
     try {
-      const medico = await this.prisma.medico.findUnique({
-        where: { nome },
+      const medico = await this.prisma.medico.findMany({
+        where: {
+          nome: {
+            contains: nome,
+          },
+        },
       });
-      if (!medico) {
-        console.log(medico);
+      if (medico.length == 0) {
         vazio();
       }
       return medico;
@@ -70,6 +78,86 @@ export class MedicoService {
       vazio();
     }
   }
+
+  async findCRM(CRM: number) {
+    try {
+      const medico = await this.prisma.medico.findUnique({ where: { CRM } });
+      if (!medico || medico.deleted == true) {
+        vazio();
+      }
+      const especialista = await this.prisma.especialista.findMany({
+        where: { medico: medico.id },
+      });
+      const end = await this.prisma.endereco.findMany({
+        where: { id: medico.CEP },
+      });
+      return [medico, especialista, end];
+    } catch (error) {
+      console.error(error.message);
+      vazio();
+    }
+  }
+
+  async findTel(telefone: number) {
+    try {
+      const medico = await this.prisma.medico.findUnique({
+        where: { telefone },
+      });
+      const especialista = await this.prisma.especialista.findMany({
+        where: { medico: medico.id },
+      });
+      const end = await this.prisma.endereco.findMany({
+        where: { id: medico.CEP },
+      });
+
+      if (!medico || medico.deleted === true) {
+        vazio();
+      }
+      return [medico, especialista, end];
+    } catch (error) {
+      console.error(error.message);
+      vazio();
+    }
+  }
+
+  async findCel(celular: number) {
+    try {
+      const medico = await this.prisma.medico.findUnique({
+        where: { celular },
+      });
+      const especialista = await this.prisma.especialista.findMany({
+        where: { medico: medico.id },
+      });
+      const end = await this.prisma.endereco.findMany({
+        where: { id: medico.CEP },
+      });
+      if (!medico) {
+        vazio();
+      }
+      return [medico, especialista, end];
+    } catch (error) {
+      console.error(error.message);
+      vazio();
+    }
+  }
+  // async findCEP(CEP: number) {
+  //   try {
+  //     const medico = await this.prisma.medico.findMany({
+  //       where: {
+  //         CEP: {
+  //           contains: CEP,
+  //         },
+  //       },
+  //     });
+  //     if (!medico) {
+  //       vazio();
+  //     }
+  //     return medico;
+  //   } catch (error) {
+  //     console.error(error.message);
+  //     vazio();
+  //   }
+  // }
 
   async update(id: number, _updateMedicoDto: UpdateMedicoDto) {
     try {
@@ -88,15 +176,21 @@ export class MedicoService {
   }
 
   async remove(id: number) {
-    try {
-      const medico = await this.prisma.medico.delete({ where: { id } });
-      if (!medico) {
-        vazio();
-      }
-      return [`Excluído com sucesso`, medico];
-    } catch (error) {
-      console.error(error.message);
-      vazio();
-    }
+    // try {
+    //   const medico = await this.prisma.medico.delete({ where: { id } });
+    //   if (!medico) {
+    //     vazio();
+    //   }
+    //   return [`Excluído com sucesso`, medico];
+    // } catch (error) {
+    //   console.error(error.message);
+    //   vazio();
+    // }
+    return await this.prisma.medico.update({
+      data: {
+        deleted: true,
+      },
+      where: { id },
+    });
   }
 }

@@ -37,4 +37,6 @@ export class CreateMedicoDto {
   @IsInt()
   @IsNotEmpty()
   CEP: number;
+
+  deleted: boolean;
 }

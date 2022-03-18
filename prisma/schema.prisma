@@ -6,38 +6,51 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Teste {
-  id    Int @unique @default(autoincrement()) @id
+  id    Int    @id @unique @default(autoincrement())
   teste String
 }
 
 model Especialidade {
-  id     Int    @unique @default(autoincrement()) @id
-  nome   String @unique
+  id     Int            @id @unique @default(autoincrement())
+  nome   String         @unique
   medico Especialista[]
 }
 
 model Especialista {
   id              Int           @unique @default(autoincrement())
   medicoId        Medico        @relation(fields: [medico], references: [id])
-  medico          Int           @unique
-  especialidadeId Especialidade @relation(fields: [especialidade], references:[id])
-  especialidade   Int        
+  medico          Int
+  especialidadeId Especialidade @relation(fields: [especialidade], references: [id])
+  especialidade   Int
 }
 
-model Medico{
-  id              Int           @unique @default(autoincrement()) @id
-  nome            String        @unique
-  CRM             Int           @unique
-  telefone        Int           @unique
-  celular         Int           @unique
-  CEP             Int
-  especialidade   Especialista[]
-  created_at      DateTime      @default(now())
-  updated_at      DateTime      @updatedAt    
+model Endereco {
+  id       Int      @id @unique @default(autoincrement())
+  cep      Int
+  endereco String
+  numero   Int
+  bairro   String
+  cidade   String
+  estado   String
+  Medico   Medico[]
+}
+
+model Medico {
+  id            Int            @id @unique @default(autoincrement())
+  nome          String         @unique
+  CRM           Int            @unique
+  telefone      Int            @unique
+  celular       Int            @unique
+  cepId         Endereco       @relation(fields: [CEP], references: [id])
+  CEP           Int
+  especialidade Especialista[]
+  deleted       Boolean        @default(false)
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
 }
