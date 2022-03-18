@@ -22,6 +22,7 @@ export class EnderecoService {
   async create(data: Prisma.EnderecoCreateInput) {
     try {
       const end = await this.prisma.endereco.create({ data });
+
       if (!end) {
         vazio();
       }
