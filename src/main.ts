@@ -25,7 +25,7 @@ async function bootstrap() {
       os IDs do medico e da especialidade. Em caso de se fazer conexão com frontEnd compatível, pode-se fazer o cadastro no mesmo formulário, salvando os dois cadastros ao mesmo tempo.
   Essa API deve conter as rotas Insert(CREATE), Update(UPDATE), Select(READ) e Soft Delete(DELETE), esta última foi criada inserindo um campo DELETED no SCHEMA do Medico com padrão FALSE, ao se deletar um médico, essa informação se altera para TRUE, fazendo com que 
     o item excluído apareça na busca geral, não dê conflito com as tabelas relacionadas mas não aparece na busca individual, ou seja, o item ainda está no banco, mas não é acessível para leitura.
-  A rota select(READ - GET) terá uma 'subrota' para cada item de cadastro do médico, para que seja feita consulta por cada um deles. Também foi inserida a rota /endereco/<numero cep> para que seja consultado o cep e conferido o endereco antes de inseri-lo no cadastro do médico.
+  A rota select(READ - GET) terá uma 'subrota' para cada item de cadastro do médico, para que seja feita consulta por cada um deles. Também foi inserida a rota /endereco/(numero cep) para que seja consultado o cep e conferido o endereco antes de inseri-lo no cadastro do médico.
   Foram utilizadas nessa API as seguintes ferramentas:
   - NestJS
   - PRISMA ORM
