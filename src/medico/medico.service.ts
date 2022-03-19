@@ -63,15 +63,11 @@ export class MedicoService {
       const especialista = await this.prisma.especialista.findMany({
         where: { medico: id },
       });
-      const end = await this.prisma.endereco.findMany({
-        where: { id: doutor.CEP },
-      });
-      console.log(end);
 
       if (!doutor || doutor.deleted === true) {
         vazio();
       }
-      return [doutor, especialista, end];
+      return [doutor, especialista];
     } catch (error) {
       console.error(error.message);
       vazio();
@@ -106,10 +102,7 @@ export class MedicoService {
       const especialista = await this.prisma.especialista.findMany({
         where: { medico: medico.id },
       });
-      const end = await this.prisma.endereco.findMany({
-        where: { id: medico.CEP },
-      });
-      return [medico, especialista, end];
+      return [medico, especialista];
     } catch (error) {
       console.error(error.message);
       vazio();
@@ -124,14 +117,11 @@ export class MedicoService {
       const especialista = await this.prisma.especialista.findMany({
         where: { medico: medico.id },
       });
-      const end = await this.prisma.endereco.findMany({
-        where: { id: medico.CEP },
-      });
 
       if (!medico || medico.deleted === true) {
         vazio();
       }
-      return [medico, especialista, end];
+      return [medico, especialista];
     } catch (error) {
       console.error(error.message);
       vazio();
@@ -146,13 +136,10 @@ export class MedicoService {
       const especialista = await this.prisma.especialista.findMany({
         where: { medico: medico.id },
       });
-      const end = await this.prisma.endereco.findMany({
-        where: { id: medico.CEP },
-      });
       if (!medico) {
         vazio();
       }
-      return [medico, especialista, end];
+      return [medico, especialista];
     } catch (error) {
       console.error(error.message);
       vazio();
@@ -258,16 +245,6 @@ export class MedicoService {
   }
 
   async remove(id: number) {
-    // try {
-    //   const medico = await this.prisma.medico.delete({ where: { id } });
-    //   if (!medico) {
-    //     vazio();
-    //   }
-    //   return [`Excluído com sucesso`, medico];
-    // } catch (error) {
-    //   console.error(error.message);
-    //   vazio();
-    // }
     return await this.prisma.medico.update({
       data: {
         deleted: true,
