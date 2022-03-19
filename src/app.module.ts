@@ -7,7 +7,12 @@ import { EspecialistaModule } from './especialista/especialista.module';
 import { EnderecoModule } from './endereco/endereco.module';
 
 @Module({
-  imports: [MedicoModule, EspecialidadeModule, EspecialistaModule, EnderecoModule],
+  imports: [
+    MedicoModule,
+    EspecialidadeModule,
+    EspecialistaModule,
+    EnderecoModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

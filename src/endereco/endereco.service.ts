@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateEnderecoDto } from './dto/update-endereco.dto';
+import fetch from 'node-fetch';
 
 function vazio() {
   throw new HttpException('Nenhum item encontrado.', HttpStatus.NOT_FOUND);
@@ -62,16 +63,16 @@ export class EnderecoService {
   }
 
   async findCep(cep: number) {
-    try {
-      const end = await this.prisma.endereco.findMany({ where: { cep } });
+    const url = `https://viacep.com.br/ws/${cep}/json`;
+    console.log(url);
 
-      if (!cep) {
-        vazio();
-      }
-      return end;
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+
+      console.log(json);
     } catch (error) {
-      console.error(error.message);
-      vazio();
+      console.log(error.message);
     }
   }
 
