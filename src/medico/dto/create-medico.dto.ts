@@ -38,5 +38,17 @@ export class CreateMedicoDto {
   @IsNotEmpty()
   CEP: number;
 
+  logradouro: string;
+
+  @IsInt()
+  @IsNotEmpty()
+  numero: number;
+
+  bairro: string;
+
+  cidade: string;
+
+  estado: string;
+
   deleted: boolean;
 }

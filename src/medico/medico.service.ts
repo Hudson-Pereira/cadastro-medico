@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateMedicoDto } from './dto/update-medico.dto';
+import fetch from 'node-fetch';
 
 function vazio() {
   throw new HttpException('Nenhum item encontrado.', HttpStatus.NOT_FOUND);
@@ -17,9 +18,26 @@ function erroCadastro(error) {
 @Injectable()
 export class MedicoService {
   constructor(private prisma: PrismaService) {}
-  async create(data: Prisma.MedicoUncheckedCreateInput) {
+  async create(data: Prisma.MedicoCreateInput) {
     try {
-      const medico = await this.prisma.medico.create({ data });
+      const response = await fetch(`https://viacep.com.br/ws/${data.CEP}/json`);
+      const dados = await response.json();
+
+      const medico = await this.prisma.medico.create({
+        data: {
+          nome: data.nome,
+          CRM: data.CRM,
+          telefone: data.telefone,
+          celular: data.celular,
+          CEP: data.CEP,
+          logradouro: dados.logradouro,
+          numero: data.numero,
+          bairro: dados.bairro,
+          cidade: dados.localidade,
+          estado: dados.uf,
+        },
+      });
+
       return [`Médico ${medico.nome} cadastrado com sucesso.`, medico];
     } catch (error) {
       erroCadastro(error);
@@ -140,24 +158,88 @@ export class MedicoService {
       vazio();
     }
   }
-  // async findCEP(CEP: number) {
-  //   try {
-  //     const medico = await this.prisma.medico.findMany({
-  //       where: {
-  //         CEP: {
-  //           contains: CEP,
-  //         },
-  //       },
-  //     });
-  //     if (!medico) {
-  //       vazio();
-  //     }
-  //     return medico;
-  //   } catch (error) {
-  //     console.error(error.message);
-  //     vazio();
-  //   }
-  // }
+  async findCEP(CEP: number) {
+    try {
+      const medico = await this.prisma.medico.findMany({
+        where: {
+          CEP: CEP,
+        },
+      });
+      if (medico.length == 0) {
+        vazio();
+      }
+      return medico;
+    } catch (error) {
+      console.error(error.message);
+      vazio();
+    }
+  }
+
+  async findRua(Rua: string) {
+    try {
+      const medico = await this.prisma.medico.findMany({
+        where: {
+          logradouro: { contains: Rua },
+        },
+      });
+      if (medico.length == 0) {
+        vazio();
+      }
+      return medico;
+    } catch (error) {
+      console.error(error.message);
+      vazio();
+    }
+  }
+
+  async findBairro(bairro: string) {
+    try {
+      const medico = await this.prisma.medico.findMany({
+        where: {
+          bairro: { contains: bairro },
+        },
+      });
+      if (medico.length == 0) {
+        vazio();
+      }
+      return medico;
+    } catch (error) {
+      console.error(error.message);
+      vazio();
+    }
+  }
+
+  async findCity(city: string) {
+    try {
+      const medico = await this.prisma.medico.findMany({
+        where: {
+          cidade: { contains: city },
+        },
+      });
+      if (medico.length == 0) {
+        vazio();
+      }
+      return medico;
+    } catch (error) {
+      console.error(error.message);
+      vazio();
+    }
+  }
+
+  async findUf(uf: string) {
+    try {
+      const medico = await this.prisma.medico.findMany({
+        where: { estado: uf },
+      });
+      if (medico.length == 0) {
+        vazio();
+      }
+      return medico;
+    } catch (error) {
+      console.error(error.message);
+      vazio();
+    }
+  }
 
   async update(id: number, _updateMedicoDto: UpdateMedicoDto) {
     try {

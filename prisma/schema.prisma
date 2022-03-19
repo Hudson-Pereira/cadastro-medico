@@ -30,25 +30,18 @@ model Especialista {
   especialidade   Int
 }
 
-model Endereco {
-  id       Int      @id @unique @default(autoincrement())
-  cep      Int
-  endereco String
-  numero   Int
-  bairro   String
-  cidade   String
-  estado   String
-  Medico   Medico[]
-}
-
 model Medico {
   id            Int            @id @unique @default(autoincrement())
   nome          String         @unique
   CRM           Int            @unique
   telefone      Int            @unique
   celular       Int            @unique
-  cepId         Endereco       @relation(fields: [CEP], references: [id])
   CEP           Int
+  logradouro    String
+  numero        Int
+  bairro        String
+  cidade        String
+  estado        String  
   especialidade Especialista[]
   deleted       Boolean        @default(false)
   created_at    DateTime       @default(now())

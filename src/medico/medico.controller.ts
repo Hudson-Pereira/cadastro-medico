@@ -52,10 +52,30 @@ export class MedicoController {
     return this.medicoService.findCel(+celular);
   }
 
-  // @Get('/cep/:cep')
-  // findCEP(@Param('cep') cep: string) {
-  //   return this.medicoService.findCEP(+cep);
-  // }
+  @Get('/cep/:cep')
+  findCEP(@Param('cep') cep: string) {
+    return this.medicoService.findCEP(+cep);
+  }
+
+  @Get('rua/:rua')
+  findRua(@Param('rua') rua: string) {
+    return this.medicoService.findRua(rua);
+  }
+
+  @Get('bairro/:bairro')
+  findBairro(@Param('bairro') bairro: string) {
+    return this.medicoService.findBairro(bairro);
+  }
+
+  @Get('cidade/:cidade')
+  findCity(@Param('cidade') cidade: string) {
+    return this.medicoService.findCity(cidade);
+  }
+
+  @Get('uf/:uf')
+  findUf(@Param('uf') uf: string) {
+    return this.medicoService.findUf(uf);
+  }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMedicoDto: UpdateMedicoDto) {
