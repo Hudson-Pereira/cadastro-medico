@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { UpdateEspecialidadeDto } from './dto/update-especialidade.dto';
 
 function vazio() {
@@ -9,10 +9,7 @@ function vazio() {
 
 function erroCadastro(error) {
   console.error(error.message);
-  throw new HttpException(
-    'Erro ao cadastrar, tente novamente.',
-    HttpStatus.BAD_REQUEST,
-  );
+  throw new HttpException('Erro ao cadastrar, tente novamente.', HttpStatus.BAD_REQUEST);
 }
 @Injectable()
 export class EspecialidadeService {
@@ -21,10 +18,7 @@ export class EspecialidadeService {
   async create(data: Prisma.EspecialidadeCreateInput) {
     try {
       const especialidade = await this.prisma.especialidade.create({ data });
-      return [
-        `Especialidade ${especialidade.nome} criada com sucesso.`,
-        especialidade,
-      ];
+      return [`Especialidade ${especialidade.nome} criada com sucesso.`, especialidade];
     } catch (error) {
       erroCadastro(error);
     }
