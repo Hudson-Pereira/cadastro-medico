@@ -9,10 +9,9 @@ const listaEspecialidade: Especialidade[] = [
   new Especialidade({ id: 3, nome: 'Terceiro' }),
 ];
 
+let especialidadeController: EspecialidadeController;
+let especialidadeService: EspecialidadeService;
 describe('EspecialidadeController', () => {
-  let especialidadeController: EspecialidadeController;
-  let especialidadeService: EspecialidadeService;
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EspecialidadeController],
@@ -22,8 +21,8 @@ describe('EspecialidadeController', () => {
           useValue: {
             create: jest.fn(),
             findAll: jest.fn().mockResolvedValue(listaEspecialidade),
-            findOne: jest.fn(),
-            update: jest.fn(),
+            findOne: jest.fn().mockResolvedValue(listaEspecialidade[0]),
+            update: jest.fn().mockResolvedValue(listaEspecialidade[1]),
             remove: jest.fn(),
           },
         },
@@ -38,19 +37,30 @@ describe('EspecialidadeController', () => {
     expect(especialidadeController).toBeDefined();
     expect(especialidadeService).toBeDefined();
   });
+});
+describe('Testando buscas', () => {
+  it('Deve retornar todas as especialidades.', async () => {
+    const result = await especialidadeController.findAll();
 
-  describe('Testando buscas', () => {
-    it('Deve retornar todos as especialidades.', async () => {
-      const result = await especialidadeController.findAll();
+    expect(result).toEqual(listaEspecialidade);
+    expect(especialidadeService.findAll).toHaveBeenCalledTimes(1);
+  });
 
-      expect(result).toEqual(listaEspecialidade);
-      expect(especialidadeService.findAll).toHaveBeenCalledTimes(1);
-    });
+  it('Deve quebrar e lançar uma exceção em busca geral', () => {
+    jest.spyOn(especialidadeService, 'findAll').mockRejectedValueOnce(new Error());
 
-    it('Deve quebrar e lançar uma exceção', () => {
-      jest.spyOn(especialidadeService, 'findAll').mockRejectedValueOnce(new Error());
+    expect(especialidadeService.findAll()).rejects.toThrowError();
+  });
 
-      expect(especialidadeService.findAll()).rejects.toThrowError();
-    });
+  it('Busca de um item por id', async () => {
+    const result = await especialidadeService.findOne(1);
+
+    expect(result).toEqual(listaEspecialidade[0]);
+  });
+
+  it('Deve quebrar e lançar uma exceção em busca por id não existente', async () => {
+    jest.spyOn(especialidadeService, 'findOne').mockRejectedValueOnce(new Error());
+
+    expect(especialidadeService.findOne(null)).rejects.toThrowError();
   });
 });
