@@ -9,10 +9,7 @@ function vazio() {
 }
 function erroCadastro(error) {
   console.error(error.message);
-  throw new HttpException(
-    'Erro ao cadastrar, verifique os dados e tente novamente.',
-    HttpStatus.BAD_REQUEST,
-  );
+  throw new HttpException('Erro ao cadastrar, verifique os dados e tente novamente.', HttpStatus.BAD_REQUEST);
 }
 
 @Injectable()

@@ -12,7 +12,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Cadastro médico - teste GCB')
     .setDescription(
-      `Teste realizado por Hudson Oliveira, Dev Jr em NodeJS, com o intuito de ser contratado como DEV JR na empresa GCB Investimentos.
+      `Teste realizado por Hudson Oliveira, Dev Jr em NodeJS.
   Essa API foi programada para cadastrar médicos, contendo as seguintes informações:
   - Nome do médico com um mínimo de 10 e máximo de 120 caracteres, sendo único por médico, portanto, deve-se cadastrar nome e sobrenome.
   - CRM: somente números com no máximo 7 caracteres
@@ -25,6 +25,8 @@ async function bootstrap() {
       os IDs do medico e da especialidade. Em caso de se fazer conexão com frontEnd compatível, pode-se fazer o cadastro no mesmo formulário, salvando os dois cadastros ao mesmo tempo.
   Essa API deve conter as rotas Insert(CREATE), Update(UPDATE), Select(READ) e Soft Delete(DELETE), esta última foi criada inserindo um campo DELETED no SCHEMA do Medico com padrão FALSE, ao se deletar um médico, essa informação se altera para TRUE, fazendo com que 
     o item excluído apareça na busca geral, não dê conflito com as tabelas relacionadas mas não aparece na busca individual, ou seja, o item ainda está no banco, mas não é acessível para leitura.
+  Foi criado um arquivo de teste unitário para a rota 'ESPECIALIDADE', onde são testadas as rotas de busca geral com e sem sucesso e busca por id com e sem sucesso. Não foi criado teste End2End pelo fato de ser 'necessario' um front end para se abrir em um navegador
+      afim de ser testada a 'experiência' do usuário, e como esss projeto é apenas o back, não foi possível implementar.
   A rota select(READ - GET) terá uma 'subrota' para cada item de cadastro do médico, para que seja feita consulta por cada um deles. Também foi inserida a rota /endereco/(numero cep) para que seja consultado o cep e conferido o endereco antes de inseri-lo no cadastro do médico.
   Foram utilizadas nessa API as seguintes ferramentas:
   - NestJS
@@ -33,14 +35,13 @@ async function bootstrap() {
   - PostgresSQL(Online, link de conexão : "postgres://mvdvqivjjkeyfl:cf986dc1b886932c63a22e4d5f96e940a5c6da68278df961e248da455f3d13f8@ec2-52-203-74-38.compute-1.amazonaws.com:5432/d7vpd98tct6gj6?schema=testegcb")
   - node-fetch para que seja feita requisição do endereço pelo CEP.
   - Ferramenta de validação de entrada de dados CLASS-VALIDATOR 
-  - Plataforma de testes durante criação Thunder Client`,
+  - Plataforma de testes durante criação Thunder Client
+  - Jest para testes unitários,`
     )
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  await app.listen(PORT, () =>
-    console.log(`App rodando em http://localhost:${PORT}.`),
-  );
+  await app.listen(PORT, () => console.log(`App rodando em http://localhost:${PORT}.`));
 }
 bootstrap();
