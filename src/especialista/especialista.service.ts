@@ -8,10 +8,7 @@ function vazio() {
 }
 function erroCadastro(error) {
   console.error(error.message);
-  throw new HttpException(
-    'Erro, verifique os dados e tente novamente.',
-    HttpStatus.BAD_REQUEST,
-  );
+  throw new HttpException('Erro, verifique os dados e tente novamente.', HttpStatus.BAD_REQUEST);
 }
 
 @Injectable()
@@ -21,10 +18,7 @@ export class EspecialistaService {
   async create(data: Prisma.EspecialistaUncheckedCreateInput) {
     try {
       const especialista = await this.prisma.especialista.create({ data });
-      return [
-        `Especialista ${especialista.medico} cadastrado com sucesso.`,
-        especialista,
-      ];
+      return [`Especialista ${especialista.medico} cadastrado com sucesso.`, especialista];
     } catch (error) {
       erroCadastro(error);
     }
@@ -67,10 +61,7 @@ export class EspecialistaService {
       if (!especialista) {
         vazio();
       }
-      return [
-        `Especialista ${especialista.medico} alterado com sucesso`,
-        especialista,
-      ];
+      return [`Especialista ${especialista.medico} alterado com sucesso`, especialista];
     } catch (error) {
       console.error(error.message);
       vazio();
