@@ -39,6 +39,10 @@ async function bootstrap() {
   - Jest para testes unitários,`
     )
     .setVersion('1.0')
+    .addTag('Medico')
+    .addTag('Especialidades')
+    .addTag('Especialistas')
+    .addTag('Endereco')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
