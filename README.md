@@ -1,4 +1,8 @@
 Teste realizado por Hudson Oliveira, Dev Jr em NodeJS.
+Ao clonar o repositorio, deve-se usar o comando 'npm install' para instalar todos os complementos necessários para o funcionamento da API.
+Após instalação, deve-se configurar o DATABASE do .ENV com o link disponibilizado mais abaixo.
+Para iniciar o projeto, deve-se utilizar o comando 'npm run start:dev', após a confirmação do servidor, deve-se utilizar o comando 'npx prisma migrate reset', para se resetar o banco de dados, fazendo com que o banco seja zerado, gerar as tabelas necessárias e rodar o comando seed para popular as tabelas básicas para funcionamento.
+
   Essa API foi programada para cadastrar médicos, contendo as seguintes informações:
   - Nome do médico com um mínimo de 10 e máximo de 120 caracteres, sendo único por médico, portanto, deve-se cadastrar nome e sobrenome.
   - CRM: somente números com no máximo 7 caracteres
